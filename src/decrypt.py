@@ -11,12 +11,9 @@ def n_split_string(s:str, n:int) -> str:
     return " ".join([s[i:i+n] for i in range(0, len(s), n)])
 
 def uid_bytes(value:str) -> bytes:
-    n = 2
-    uid = []
-    # split the string, construct the hex string, and convert to int16 list
-    for v in ['0x' + value[i:i+n] for i in range(0, len(value), n)]:
-        # Convert hex string to int
-        uid.append(int(v, 16))
+    
+    uid = n_split_string(value, 2).split(' ')
+    uid = list(map(lambda v: int(v, 16), uid))
 
     # convert int list into bytes
     return bytes(uid)
