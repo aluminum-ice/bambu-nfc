@@ -60,7 +60,7 @@ def decode_argparse() -> argparse.ArgumentParser:
         help="optional output file name (default: %(default)s)",
         type=str,
         nargs='?', 
-        const="decoded.json",
+        const="data.json",
         required=False,
     )
 

@@ -36,6 +36,10 @@ def filament_bed_temperature(block: str) -> str:
     hex_str = "".join(block.split(' ')[6:8])
     return hex_to_int16_le(hex_str)
 
+def filament_length(block: str) -> str:
+    hex_str = "".join(block.split(' ')[4:6])
+    return hex_to_int16_le(hex_str)
+
 def max_hotend_temperature(block: str) -> str:
     hex_str = "".join(block.split(' ')[8:10])
     return hex_to_int16_le(hex_str)
@@ -74,28 +78,34 @@ if __name__ == '__main__':
 
     data = {}
     data["file"] = args.nfc
-    data["type"] = filament_type(encoded["Block 2"])
-    data["detailed type"] = detailed_filament_type(encoded["Block 4"])
-    data["color"] = filament_color(encoded["Block 5"])
-    data["diameter [mm]"] = filament_diameter(encoded["Block 5"])
-    data["spool weight [g]"] = spool_weight(encoded["Block 5"])
-    data["drying temperature [C]"] = filament_drying_temperature(encoded["Block 6"])
-    data["drying time [H]"] = filament_drying_time(encoded["Block 6"])
-    data["bed temperature [C]"] = filament_bed_temperature(encoded["Block 6"])
-    data["max hotend temperature [C]"] = max_hotend_temperature(encoded["Block 6"])
-    data["min hotend temperature [C]"] = min_hotend_temperature(encoded["Block 6"])
-    data["spool width [mm]"] = spool_width(encoded["Block 10"])
+
+    filament = {}
+    filament["type"] = filament_type(encoded["Block 2"])
+    filament["detailed type"] = detailed_filament_type(encoded["Block 4"])
+    filament["color"] = filament_color(encoded["Block 5"])
+    filament["diameter [mm]"] = filament_diameter(encoded["Block 5"])
+    filament["length [m]"] = filament_length(encoded["Block 14"])
+    filament["drying temperature [C]"] = filament_drying_temperature(encoded["Block 6"])
+    filament["drying time [H]"] = filament_drying_time(encoded["Block 6"])
+    data["filament"] = filament
+
+    spool = {}
+    spool["weight [g]"] = spool_weight(encoded["Block 5"])
+    spool["width [mm]"] = spool_width(encoded["Block 10"])
+    data["spool"] = spool
+
+    printing = {}
+
+
+    printing["bed temperature [C]"] = filament_bed_temperature(encoded["Block 6"])
+    printing["min hotend temperature [C]"] = min_hotend_temperature(encoded["Block 6"])
+    printing["max hotend temperature [C]"] = max_hotend_temperature(encoded["Block 6"])
+    data["print"] = printing
+
     data["production datetime"] = production_datetime(encoded["Block 12"])
 
-    with open(args.filename, 'w') as f:
-        json.dump(data, f)
-
-    # if args.filename is None:
-    #     if args.flipper == False:
-    #         print([a.hex().upper() for a in keys])
-    #     else:
-    #         for a in keys:
-    #             print(a.hex().upper())
-
-    # if args.filename is not None:
-    #     to_json_file(args.uid, keys, args.filename)
+    if args.filename is not None:
+        with open(args.filename, 'w') as f:
+            json.dump(data, f)
+    else:
+        print(data)
