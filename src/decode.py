@@ -68,16 +68,9 @@ def read_nfc_file(filename: str) -> dict:
 
     return encoded
 
-
-if __name__ == '__main__':
-
-    parser = decode_argparse()
-    args = parser.parse_args()
-
-    encoded = read_nfc_file(args.nfc)
-
+def decode(filename: str, nfc_data: dict) -> dict:
     data = {}
-    data["file"] = args.nfc
+    data["file"] = filename
 
     filament = {}
     filament["type"] = filament_type(encoded["Block 2"])
@@ -96,13 +89,23 @@ if __name__ == '__main__':
 
     printing = {}
 
-
     printing["bed temperature [C]"] = filament_bed_temperature(encoded["Block 6"])
     printing["min hotend temperature [C]"] = min_hotend_temperature(encoded["Block 6"])
     printing["max hotend temperature [C]"] = max_hotend_temperature(encoded["Block 6"])
     data["print"] = printing
 
     data["production datetime"] = production_datetime(encoded["Block 12"])
+
+    return data
+
+
+if __name__ == '__main__':
+
+    parser = decode_argparse()
+    args = parser.parse_args()
+
+    encoded = read_nfc_file(args.nfc)
+    data = decode(args.nfc, encoded)
 
     if args.filename is not None:
         with open(args.filename, 'w') as f:
