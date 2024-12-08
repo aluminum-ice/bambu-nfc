@@ -6,7 +6,7 @@ The `/decoded` directory provides sample human readable JSON files generated fro
 
 ## gen_key.py
 
-`python3 ./decrypt.py -u 6AA42B72 -f ../nfc/ABS/ABS-GF_ORANGE_1.json`
+`python3 ./gen_key.py -u 6AA42B72 -f ../nfc/ABS/ABS-GF_ORANGE_1.json`
 
 See `python3 ./gen_key.py -h` for information on input arguments. 
 
