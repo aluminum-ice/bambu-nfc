@@ -5,13 +5,10 @@ from Cryptodome.Protocol.KDF import HKDF
 from Cryptodome.Hash import SHA256
 
 from utils.parser import init_argparse
-
-def n_split_string(s:str, n:int) -> str:
-    # split the string into n characters
-    return " ".join([s[i:i+n] for i in range(0, len(s), n)])
+from utils.helper import n_split_string
 
 def uid_bytes(value:str) -> bytes:
-    
+
     uid = n_split_string(value, 2).split(' ')
     uid = list(map(lambda v: int(v, 16), uid))
 
