@@ -4,7 +4,7 @@ import argparse, os, json
 from Cryptodome.Protocol.KDF import HKDF
 from Cryptodome.Hash import SHA256
 
-from utils.parser import init_argparse
+from utils.parser import gen_keys_argparse
 from utils.helper import n_split_string
 
 def uid_bytes(value:str) -> bytes:
@@ -44,7 +44,7 @@ def to_json_file(uid:str, keys:str, filename:str):
 
 if __name__ == '__main__':
 
-    parser = init_argparse()
+    parser = gen_keys_argparse()
     args = parser.parse_args()
 
     keys = kdf(uid_bytes(args.uid))
